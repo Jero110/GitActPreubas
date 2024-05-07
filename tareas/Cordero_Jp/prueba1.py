@@ -12,6 +12,3 @@ df = pl.DataFrame(data)
 
 # Mostrar las primeras filas del DataFrame
 print(df.head())
-
-# Obtener algunas estadísticas básicas
-print(df.select(pl.col("edad")).stat().describe())
