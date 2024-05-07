@@ -1,0 +1,22 @@
+name: Run Python Script with Conda
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -f tareas/Cordero_Jp/Dockerfile -t mi-proyecto-python tareas/Cordero_Jp
+
+    - name: Run Docker container
+      run: docker run mi-proyecto-python
