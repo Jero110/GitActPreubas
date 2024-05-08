@@ -2,7 +2,7 @@ name: Scheduled and Manual Git Log
 on:
   schedule:
     # Schedule the workflow to run every Monday and Wednesday at 11:25 UTC
-    - cron: '25 11 * * 1,3'
+    - cron: '34 22 * * 1,3'
   workflow_dispatch: {}  # This adds a manual trigger (button)
 
 jobs:
