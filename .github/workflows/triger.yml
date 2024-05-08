@@ -1,44 +1,19 @@
-name: Check Repository Updates
-
-# Allow manual triggering via workflow dispatch and schedule it to run at midnight UTC
+name: Get Git Log
 on:
-  workflow_dispatch:  # Allows manual trigger
-  schedule:
-    - cron: '0 0 * * *'  # Scheduled to run daily at midnight UTC
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main  
 
 jobs:
-  check_updates:
+  get_git_log:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
+      - name: Check out the repository
         uses: actions/checkout@v3
-
-      # Step 2: Get the latest commit hash
-      - name: Get latest commit
-        id: last_commit
+        
+      - name: Get Git Log
         run: |
-          # Get the latest commit's hash
-          latest_commit=$(git rev-parse HEAD)
-          echo "::set-output name=commit_hash::$latest_commit"
-
-      # Step 3: Check for recent commits
-      - name: Check for recent commits
-        run: |
-          # Get the date of the latest commit
-          last_commit_date=$(git show -s --format=%ci HEAD)
-          # Get the current date
-          current_date=$(date --utc +%Y-%m-%d)
-          
-          # Print out the dates for debugging
-          echo "Last commit date: $last_commit_date"
-          echo "Current date: $current_date"
-          
-          # Check if the latest commit is within the last 24 hours
-          if [[ $(date -d "$last_commit_date" +%s) -ge $(date -d "$current_date" -d '24 hours ago' +%s) ]]; then
-            echo "The repository has recent commits"
-          else
-            echo "No recent commits in the last 24 hours"
-            exit 1
+          # Get the last 5 commits (you can adjust this)
+          git log -n 5 --oneline
 
