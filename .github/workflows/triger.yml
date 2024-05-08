@@ -1,39 +1,44 @@
-name: Fetch Upstream Updates
+name: Check Repository Updates
+
+# Allow manual triggering via workflow dispatch and schedule it to run at midnight UTC
 on:
-  # Schedule-based trigger (example: every day at 12:00 UTC)
+  workflow_dispatch:  # Allows manual trigger
   schedule:
-    - cron: "0 12 * * *"
-  # Manual trigger via workflow dispatch
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # Scheduled to run daily at midnight UTC
 
 jobs:
-  fetch-upstream:
+  check_updates:
     runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout the repository
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Add the upstream repository
-      - name: Add Upstream Repository
-        run: git remote add upstream https://github.com/<upstream-owner>/<upstream-repo>.git
-        # Ensure to replace <upstream-owner> and <upstream-repo> with the correct values
-
-      # Step 3: Fetch from upstream
-      - name: Fetch from Upstream
-        run: git fetch upstream
-
-      # Step 4: List Remote Branches
-      - name: List Remote Branches
-        run: git branch -r
-        # This step helps confirm that the fetch worked correctly
-
-      # Step 5: Print Recent Commits from Upstream
-      - name: Print Recent Commits from Upstream
+      # Step 2: Get the latest commit hash
+      - name: Get latest commit
+        id: last_commit
         run: |
-          git log upstream/main --pretty=format:"%h - %an, %ar : %s" -n 5
-        # Change 'main' to the appropriate default branch name in the upstream repository
-        # Adjust the '-n 5' option to get a different number of recent commits
+          # Get the latest commit's hash
+          latest_commit=$(git rev-parse HEAD)
+          echo "::set-output name=commit_hash::$latest_commit"
 
+      # Step 3: Check for recent commits
+      - name: Check for recent commits
+        run: |
+          # Get the date of the latest commit
+          last_commit_date=$(git show -s --format=%ci HEAD)
+          # Get the current date
+          current_date=$(date --utc +%Y-%m-%d)
+          
+          # Print out the dates for debugging
+          echo "Last commit date: $last_commit_date"
+          echo "Current date: $current_date"
+          
+          # Check if the latest commit is within the last 24 hours
+          if [[ $(date -d "$last_commit_date" +%s) -ge $(date -d "$current_date" -d '24 hours ago' +%s) ]]; then
+            echo "The repository has recent commits"
+          else
+            echo "No recent commits in the last 24 hours"
+            exit 1
 
