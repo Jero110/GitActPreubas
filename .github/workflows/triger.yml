@@ -1,0 +1,26 @@
+name: Check for Remote Updates
+
+# Specify triggers
+on:
+  schedule:
+    - cron: '0 21 * * 1,3'  # Every Monday and Wednesday at 9:00 PM UTC
+  workflow_dispatch:  # Allows manual triggers via the GitHub Actions UI
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Check out the repository to the GitHub Actions runner
+
+      - name: Fetch from Remote
+        run: git fetch origin  # Fetch updates from the 'origin' remote repository
+
+      - name: Check for Updates
+        run: |
+          # Checks if there are any updates in the remote repository
+          if [ -n "$(git log HEAD..origin/HEAD --oneline)" ]; then
+            echo "There are updates in the remote repository."
+          else
+            echo "No updates in the remote repository."
