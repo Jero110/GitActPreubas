@@ -1,4 +1,4 @@
-name: Check for Remote Updates
+name: Check Fetch Output
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Allows manual triggers via the GitHub Actions UI
 
 jobs:
-  check_updates:
+  check_fetch_output:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,16 +14,9 @@ jobs:
         uses: actions/checkout@v3  # Check out the repository to the GitHub Actions runner
 
       - name: Fetch from Remote
-        run: git fetch origin  # Fetch updates from the 'origin' remote repository
+        id: fetch_result
+        run: git fetch origin 2>&1  # Fetch updates and capture output
 
-      - name: Check for Updates
-        run: |
-          # Check for remote repository updates
-          updates=$(git log HEAD..origin/HEAD --oneline)
-          
-          if [[ -n "$updates" ]]; then
-            echo "There are updates in the remote repository:"
-            echo "$updates"
-          else
-            echo "No updates in the remote repository."
+      - name: Display Fetch Output
+        run: echo "${{ steps.fetch_result.outputs.stdout }}"  # Display the fetch output
 
