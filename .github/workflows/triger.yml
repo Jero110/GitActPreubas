@@ -1,8 +1,9 @@
-name: Scheduled Git Log
+name: Scheduled and Manual Git Log
 on:
   schedule:
     # Schedule the workflow to run every Monday and Wednesday at 11:25 UTC
     - cron: '25 11 * * 1,3'
+  workflow_dispatch: {}  # This adds a manual trigger (button)
 
 jobs:
   get_git_log:
@@ -13,6 +14,5 @@ jobs:
         
       - name: Get Git Log
         run: |
-          # Get the last 5 commits
+          # Get the last 5 commits with commit message
           git log -n 5 --oneline
-
