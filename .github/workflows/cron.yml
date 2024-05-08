@@ -1,0 +1,25 @@
+name: Check for Remote Updates
+
+on:
+  schedule:
+    - cron: '50 8 * * 1'  # Every Monday at 8:50 UTC
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Check out the repository code to the GitHub Actions runner
+
+      - name: Fetch from Remote
+        run: git fetch origin  # Fetches the updates from the 'origin' remote repository
+
+      - name: Check for Updates
+        run: |
+          # Check if there are any updates to fetch
+          if [ -n "$(git log HEAD..origin/HEAD --oneline)" ]; then
+            echo "There are updates in the remote repository."
+          else
+            echo "No updates in the remote repository."
+          fi
