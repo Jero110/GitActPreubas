@@ -1,16 +1,20 @@
-name: Scheduled and Manual Git Log
+name: Prueba_tiempo
 on:
   schedule:
-    # Schedule the workflow to run every Monday and Wednesday at 11:25 UTC
-    - cron: '34 22 * * 1,3'
-  workflow_dispatch:  # This adds a manual trigger (button)
-
+    - cron: '25 22 * * 1,3'  # Ejecutar a las 17:25 hora de México (22:25 UTC) todos los lunes y miércoles
+  workflow_dispatch:
 jobs:
-  get_git_log:
+  git_log:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v3
-        
-     - name: Show Git Log
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Show Git Log
       run: git log
+
+  pull_request:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
