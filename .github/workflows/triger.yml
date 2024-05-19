@@ -1,4 +1,4 @@
-name: Prueba_tiempo
+name: Extra
 on:
   schedule:
     - cron: '25 22 * * 1,3'  # Ejecutar a las 17:25 hora de México (22:25 UTC) todos los lunes y miércoles
@@ -17,4 +17,3 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
-
