@@ -12,7 +12,5 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
         
-      - name: Get Git Log
-        run: |
-          # Get the last 5 commits with commit message
-          git log -n 5 --oneline
+     - name: Show Git Log
+      run: git log
